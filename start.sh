@@ -7,7 +7,7 @@ fi;
 ! test -e /root/log || rm /root/log;
 ln -sf /dev/stdout /root/log;
 for session in ${SESSIONS}; do
-    P=${session#**/}
+    P=${session##*/}
     P=${P:-$session}
     if ! test -d /data/${P}; then
         boar --repo=/boar $session
