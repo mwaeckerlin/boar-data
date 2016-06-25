@@ -6,11 +6,12 @@ if test -z "$SESSIONS"; then
 fi;
 ! test -e /root/log || rm /root/log;
 ln -sf /dev/stdout /root/log;
+cd /data
 for session in ${SESSIONS}; do
     P=${session##*/}
     P=${P:-$session}
     if ! test -d /data/${P}; then
-        boar --repo=/boar $session
+        boar --repo=/boar co $session ${P}
     fi
 done
 cron -fL7
