@@ -14,4 +14,8 @@ for session in ${SESSIONS}; do
         boar co ${session} ${P}
     fi
 done
-cron -fL7
+if test -e /etc/cron.hourly/sync-boar; then
+    mv /etc/cron.hourly/sync-boar /etc/cron.hourly/sync-boar.bak
+fi
+sleep infinity
+#cron -fL7
