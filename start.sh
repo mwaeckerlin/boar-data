@@ -11,7 +11,7 @@ for session in ${SESSIONS}; do
     P=${session##*/}
     P=${P:-$session}
     if ! test -d /data/${P}; then
-        boar --repo=/boar co $session ${P}
+        boar co ${session} ${P}
     fi
 done
 cron -fL7
