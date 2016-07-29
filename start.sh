@@ -2,8 +2,6 @@
 
 export SESSIONS=${SESSIONS:-$(boar list | sed -n 's, ([0-9]* revs),,p')}
 
-! test -e /root/log || rm /root/log;
-ln -sf /dev/stdout /root/log;
 for session in ${SESSIONS}; do
     P=${session##*/}
     P=${P:-$session}
@@ -18,4 +16,8 @@ for session in ${SESSIONS}; do
 done
 cd /data
 echo "==== initialized, starting service"
+touch /root/log
+rm /root/log
+mkfifo /root/log
+tail -f /root/log &
 cron -fL7
