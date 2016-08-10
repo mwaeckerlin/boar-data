@@ -1,4 +1,5 @@
 #!/bin/bash
+export LANG=en_US.UTF-8
 (
     echo "$(date) ==== $0"
     for f in /data/*; do
