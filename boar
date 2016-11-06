@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/opt/boar/boar --repo=/boar $*
