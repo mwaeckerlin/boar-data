@@ -21,6 +21,7 @@ ADD boar /usr/local/bin/boar
 ADD start.sh /start.sh
 WORKDIR /data
 
+USER boar
 CMD /start.sh
 
 VOLUME /data
