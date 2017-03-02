@@ -9,6 +9,7 @@ update() {
         boar update -q
         boar ci -q
     fi
+    chmod -R go+r .
 }
 
 if [[ $BOAR_REPO =~ BOAR_USER ]]; then
