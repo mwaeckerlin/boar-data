@@ -9,7 +9,7 @@ update() {
         boar update -q
         boar ci -q
     fi
-    chmod -R go+r .
+    chmod -R ugo+r .
 }
 
 if [[ $BOAR_REPO =~ BOAR_USER ]]; then
@@ -46,14 +46,15 @@ export SESSIONS=${SESSIONS:-$(boar list | sed -n 's, ([0-9]* revs),,p')}
 for session in ${SESSIONS}; do
     P=${session##*/}
     P=${P:-$session}
-    if ! test -d /data/${P}; then
+    if ! test -d "/data/${P}"; then
         echo "$(date) ==== Checkout ${P}"
         cd /data
-        boar co ${session} ${P}
-        cd /data/${P}
+        boar co "${session}" "${P}"
+        cd "/data/${P}"
         echo "$(date) ==== Update ${P}"
         while ! boar update; do "$(date) **** ERROR"; done
     fi
+    chmod -R ugo+r "/data/${P}"
 done
 
 echo "==== initialized, starting service"
