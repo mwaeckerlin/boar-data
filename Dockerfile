@@ -21,6 +21,7 @@ ADD boar /usr/local/bin/boar
 ADD start.sh /start.sh
 WORKDIR /data
 
+RUN useradd -ms /bin/bash boar
 USER boar
 CMD /start.sh
 
