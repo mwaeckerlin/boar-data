@@ -58,6 +58,10 @@ for session in ${SESSIONS}; do
 done
 
 echo "==== initialized, starting service"
+echo "$(data) ---- startup, update all"
+for f in /data/*; do
+    update "$f"
+done
 while true; do
     echo "$(date) ---- setup watches"
     unset p
