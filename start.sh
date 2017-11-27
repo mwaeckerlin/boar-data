@@ -9,7 +9,7 @@ update() {
         boar update -q
         boar ci -q
     fi
-    chmod -R ugo+r .
+    chmod -R +rw .
 }
 
 if [[ $BOAR_REPO =~ BOAR_USER ]]; then
@@ -54,7 +54,7 @@ for session in ${SESSIONS}; do
         echo "$(date) ==== Update ${P}"
         while ! boar update; do "$(date) **** ERROR"; done
     fi
-    chmod -R ugo+r "/data/${P}"
+    chmod -R +rw "/data/${P}"
 done
 
 echo "==== initialized, starting service"
