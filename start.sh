@@ -58,7 +58,7 @@ for session in ${SESSIONS}; do
 done
 
 echo "==== initialized, starting service"
-echo "$(data) ---- startup, update all"
+echo "$(date) ---- startup, update all"
 for f in /data/*; do
     update "$f"
 done
@@ -70,7 +70,7 @@ while true; do
             update "$p"
         done
     if test ${PIPESTATUS[0]} -eq 2; then
-        echo "$(data) ---- timeout, update all"
+        echo "$(date) ---- timeout, update all"
         for f in /data/*; do
             update "$f"
         done
