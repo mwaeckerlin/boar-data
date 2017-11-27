@@ -62,9 +62,9 @@ while true; do
     echo "$(date) ---- setup watches"
     unset p
     inotifywait -t ${TIMEOUT:-600} -r --format '%w' -e modify,attrib,move,create,delete /data/* |
-    while read p; do
-        update "$p"
-    done
+        while read p; do
+            update "$p"
+        done
     if test ${PIPESTATUS[0]} -eq 2; then
         echo "$(data) ---- timeout, update all"
         for f in /data/*; do
