@@ -13,12 +13,12 @@ ENV SSH_PUBKEY ""
 ENV SSH_PRIVKEY ""
 
 WORKDIR /opt
-RUN apt-get update
-RUN apt-get -y install openssh-client inotify-tools python wget mcrypt language-pack-en
-RUN wget -O- ${BOAR_SOURCE} | tar xz
+RUN apt-get --no-install-recommends --no-install-suggests -y install openssh-client inotify-tools python wget mcrypt language-pack-en \
+ && wget -O- ${BOAR_SOURCE} | tar xz \
+ && apt-get autoremove --purge wget -y \
+ && /cleanup.sh
 
 ADD boar /usr/local/bin/boar
-ADD start.sh /start.sh
 WORKDIR /data
 
 RUN useradd -ms /bin/bash boar

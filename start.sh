@@ -34,11 +34,11 @@ Host ${BOAR_HOST}
   HostName ${BOAR_HOST}
   User ${BOAR_USER}
   Port ${BOAR_PORT}
+  StrictHostKeyChecking no
 EOF
     ssh-keyscan -H ${BOAR_HOST} >> ~/.ssh/known_hosts;
     echo "*** SSH-Public-Key, add to ${BOAR_HOST}'s ~${BOAR_USER}/.ssh/authorized_keys:"
     cat ~/.ssh/id_rsa.pub
-    sleep 120
 fi
 
 export SESSIONS=${SESSIONS:-$(boar list | sed -n 's, ([0-9]* revs),,p')}
