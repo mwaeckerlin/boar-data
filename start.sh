@@ -47,13 +47,16 @@ for session in ${SESSIONS}; do
     P=${session##*/}
     P=${P:-$session}
     if ! test -d "/data/${P}"; then
-        echo "$(date) ==== Checkout ${P}"
-        cd /data
-        boar co "${session}" "${P}"
+        while ! test -d "/data/${P}"; do
+            echo "$(date) ==== Checkout ${P}"
+            cd /data
+            boar co "${session}" "${P}"
+        done
         cd "/data/${P}"
         echo "$(date) ==== Update ${P}"
-        while ! boar update; do "$(date) **** ERROR"; done
+        while ! boar update; do "$(date) **** ERROR in ${P}"; done
     fi
+    echo "$(date) ==== Fix Permissions ${P}"
     chmod -R +rw "/data/${P}"
 done
 
