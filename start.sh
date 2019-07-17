@@ -3,11 +3,12 @@
 update() {
     echo "$(date) ---- $*"
     cd "$*"
-    if boar ci -q; then
+    STATUS="$(boar status)"
+    if boar ci -q -m "changed from ${CONTAINERNAME}:\n${STATUS:-no status}"; then
         boar update -q
     else
         boar update -q
-        boar ci -q
+        boar ci -q -m "changed from ${CONTAINERNAME}:\n${STATUS:-no status}"
     fi
     chmod -R +rw .
 }
