@@ -1,23 +1,24 @@
-#!/bin/bash
+#!/bin/sh
 
 update() {
     echo "$(date) ---- $*"
     cd "$*"
     STATUS="$(boar status)"
-    if boar ci -q -m "changed from ${CONTAINERNAME}:\n${STATUS:-no status}"; then
-        boar update -q
+    STATUS="${STATUS:-no status}"
+    echo "$STATUS"
+    if boar ci $OPTIONS -m "changed from ${CONTAINERNAME}:\n${STATUS}"; then
+        boar update $OPTIONS
     else
-        boar update -q
-        boar ci -q -m "changed from ${CONTAINERNAME}:\n${STATUS:-no status}"
+        boar update $OPTIONS
+        boar ci $OPTIONS -m "changed from ${CONTAINERNAME}:\n${STATUS}"
     fi
-    chmod -R +rw .
 }
 
-if [[ $BOAR_REPO =~ BOAR_USER ]]; then
+if test "${BOAR_REPO}" != ${BOAR_REPO//BOAR_USER/}; then
     export BOAR_REPO=${BOAR_REPO//BOAR_USER/$BOAR_USER}
 fi
 
-if [[ $BOAR_REPO =~ BOAR_HOST ]]; then
+if test "${BOAR_REPO}" != ${BOAR_REPO//BOAR_HOST/}; then
     export BOAR_REPO=${BOAR_REPO//BOAR_HOST/$BOAR_HOST}
 fi
 
@@ -55,10 +56,8 @@ for session in ${SESSIONS}; do
         done
         cd "/data/${P}"
         echo "$(date) ==== Update ${P}"
-        while ! boar update; do "$(date) **** ERROR in ${P}"; done
+        while ! boar update -q; do "$(date) **** ERROR in ${P}"; done
     fi
-    echo "$(date) ==== Fix Permissions ${P}"
-    chmod -R +rw "/data/${P}"
 done
 
 echo "==== initialized, starting service"
@@ -69,11 +68,15 @@ done
 while true; do
     echo "$(date) ---- setup watches"
     unset p
-    inotifywait -t ${TIMEOUT:-600} -r --format '%w' -e modify,attrib,move,create,delete /data/* |
-        while read p; do
-            update "$p"
-        done
-    if test ${PIPESTATUS[0]} -eq 2; then
+    (
+        inotifywait -t ${TIMEOUT:-600} -r --format '%w' -e modify,attrib,move,create,delete /data/*;
+        echo -n $? > /tmp/result.$$
+    ) | while read p; do
+        update "$p"
+    done
+    res=$(cat /tmp/result.$$)
+    rm /tmp/result.$$
+    if test $res -eq 2; then
         echo "$(date) ---- timeout, update all"
         for f in /data/*; do
             update "$f"

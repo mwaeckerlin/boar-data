@@ -1,6 +1,4 @@
-FROM mwaeckerlin/ubuntu-base
-MAINTAINER mwaeckerlin
-ENV TERM xterm
+FROM mwaeckerlin/base
 
 ENV TIMEOUT "600"
 ENV BOAR_USER "boar"
@@ -11,18 +9,16 @@ ENV BOAR_SOURCE "https://bitbucket.org/mats_ekberg/boar/downloads/boar.16-Nov-20
 ENV LANG "en_US.UTF-8"
 ENV SSH_PUBKEY ""
 ENV SSH_PRIVKEY ""
+ENV OPTIONS "-q"
 
 WORKDIR /opt
-RUN apt-get --no-install-recommends --no-install-suggests -y install openssh-client inotify-tools python wget mcrypt language-pack-en \
+RUN $PKG_INSTALL openssh-client inotify-tools python wget \
  && wget -O- ${BOAR_SOURCE} | tar xz \
- && apt-get autoremove --purge wget -y \
- && /cleanup.sh
-
+ && $PKG_REMOVE wget \
+ && mkdir /data \
+ && chown ${RUN_USER}:${RUN_GROUP} /data
 ADD boar /usr/local/bin/boar
 WORKDIR /data
-
-RUN useradd -ms /bin/bash boar
-USER boar
-CMD /start.sh
+USER $RUN_USER
 
 VOLUME /data
