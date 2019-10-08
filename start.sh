@@ -12,6 +12,7 @@ update() {
         boar update $OPTIONS
         boar ci $OPTIONS -m "changed from ${CONTAINERNAME}:\n${STATUS}"
     fi
+    chmod -R ugo+r .
 }
 
 if test "${BOAR_REPO}" != ${BOAR_REPO//BOAR_USER/}; then
@@ -58,6 +59,8 @@ for session in ${SESSIONS}; do
         echo "$(date) ==== Update ${P}"
         while ! boar update -q; do "$(date) **** ERROR in ${P}"; done
     fi
+    echo "$(date) ==== Fix Permissions ${P}"
+    chmod -R +rw "/data/${P}"
 done
 
 echo "==== initialized, starting service"
